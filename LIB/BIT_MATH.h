@@ -18,6 +18,9 @@
 #define GET_BIT(REG, POS)  (uint8)((REG>>POS)&((uint8)1))
 
 
+
+
+
 /* Section : Data Type Declarations */
 
 /* Section : Macro Declarations */

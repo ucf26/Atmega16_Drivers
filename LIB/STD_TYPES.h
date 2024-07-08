@@ -8,11 +8,12 @@
 #ifndef STD_TYPES_H
 #define STD_TYPES_H
 
-/* Section : Includes */
 
 
-/* Section : Macro Functions Declarations */
+/* ----------------- Includes -----------------*/
 
+
+/* ----------------- Macro Definitions -----------------*/
 typedef unsigned char		uint8;
 typedef unsigned short		uint16;
 typedef unsigned long		uint32;
@@ -24,18 +25,18 @@ typedef long		sint32;
 typedef long long	sint64;
 
 
-/* Section : Data Type Declarations */
+/* ----------------- Macro Functions Declarations -----------------*/
+
+/* -----------------Data Type Declarations -----------------*/
 
 typedef enum{
-	E_OK, 
+	E_OK,
 	E_NOT_OK
 }Std_ret;
 
 
-/* Section : Macro Declarations */
+/* ----------------- Functions Declarations ----------------- */
 
-
-/* Section : Functions Declarations */
 
 
 

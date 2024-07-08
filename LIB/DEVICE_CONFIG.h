@@ -9,15 +9,17 @@
 #ifndef DEVICE_CONFIG_H
 #define DEVICE_CONFIG_H
 
-/* Section : Includes */
+/* ----------------- Includes -----------------*/
 
-/* Section : Macro Functions Declarations */
 
-/* Section : Data Type Declarations */
+/* ----------------- Macro Definitions -----------------*/
 
-/* Section : Macro Declarations */
+
+/* ----------------- Macro Functions Declarations -----------------*/
+
+/* -----------------Data Type Declarations -----------------*/
 #define F_CPU    1200000UL
-/* Section : Functions Declarations */
+/* ----------------- Functions Declarations ----------------- */
 
 
 #endif /* DEVICE_CONFIG_H */
