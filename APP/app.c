@@ -8,24 +8,22 @@
 
 #include "app.h"
 
-port_config_t port_obj;
-
-
-
+led_t led1 = {.port_idx = PORTA_INDEX, .pin_idx=PIN0_INDEX, .led_status = LED_OFF};
+led_t led2 = {.port_idx = PORTA_INDEX, .pin_idx=PIN1_INDEX, .led_status = LED_OFF};
+led_t led3 = {.port_idx = PORTA_INDEX, .pin_idx=PIN2_INDEX, .led_status = LED_OFF};
 
 int main(void)
 {
 	Std_ret ret = E_NOT_OK;
-	port_obj.direction = 0xff;
-	port_obj.logic = 0x00;
-	port_obj.port_index = PORTA_INDEX;
-	
+	ret = LED_Init(&led1);
+	ret = LED_Init(&led2);
+	ret = LED_Init(&led3);
 
-	ret = DIO_Port_Init(&port_obj);
-	
     while(1)
     {
-		ret = DIO_Port_Togle(&port_obj);
+		ret = LED_Toggle(&led1);
+		ret = LED_Toggle(&led2);
+		ret = LED_Toggle(&led3);
 		_delay_ms(500);
     }
 }

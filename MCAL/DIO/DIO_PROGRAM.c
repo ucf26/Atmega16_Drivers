@@ -81,6 +81,7 @@ Std_ret DIO_Pin_Write_Logic(pin_config_t *pin_cfg, logic_t logic)
 	{
 		switch(logic)
 		{
+			case DIO_LOW:
 				switch (pin_cfg->port_index)
 				{
 					case PORTA_INDEX: CLR_BIT(PORTA, pin_cfg->pin_index); break;
@@ -245,10 +246,10 @@ Std_ret DIO_Port_Read_Logic(port_config_t *port, uint8 *logic)
 	{
 		switch(port->port_index)
 		{
-			case PORTA_INDEX: (*logic) = PORTA ; break;
-			case PORTB_INDEX: (*logic) = PORTB ; break;
-			case PORTC_INDEX: (*logic) = PORTC ; break;
-			case PORTD_INDEX: (*logic) = PORTD ; break;
+			case PORTA_INDEX: (*logic) = PINA ; break;
+			case PORTB_INDEX: (*logic) = PINB ; break;
+			case PORTC_INDEX: (*logic) = PINC ; break;
+			case PORTD_INDEX: (*logic) = PIND ; break;
 		}
 		ret = E_OK;
 	}
@@ -278,7 +279,7 @@ Std_ret DIO_Port_Togle(port_config_t *port)
 Std_ret DIO_Port_Init(port_config_t *port)
 {
 	Std_ret ret = E_NOT_OK;
-	if((port > PORTD_INDEX) || (port < PORTA_INDEX))
+	if(NULL == port)
 	{
 		ret = E_NOT_OK;
 	}
