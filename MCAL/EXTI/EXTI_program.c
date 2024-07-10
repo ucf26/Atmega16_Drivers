@@ -13,7 +13,7 @@ static void (* EXTI_IN2_InterruptHandler)(void) = NULL;
 
 
 static Std_ret EXTI_INTx_setHandler(interrupt_exti_t* _exti, interrupt_src_t src);
-static Std_ret EXTI_INTx_setSenceMode(interrupt_exti_t* _exti, sense_mode_t src);
+static Std_ret EXTI_INTx_setSenceMode(interrupt_exti_t* _exti, sense_mode_t mode);
 
 
 static Std_ret EXTI_INT0_SetMode(sense_mode_t mode);
@@ -52,7 +52,6 @@ Std_ret EXTI_Init(interrupt_exti_t* _exti)
 	return ret;
 }
 
-
 Std_ret EXTI_De_Init(interrupt_exti_t* _exti)
 {
 	Std_ret ret = E_NOT_OK;
@@ -70,7 +69,7 @@ Std_ret EXTI_De_Init(interrupt_exti_t* _exti)
 }
 
 
-/*------------------------------------------ Helper Functions Implementations /*------------------------------------------*/
+/*------------------------------------------ Helper Functions Implementations ------------------------------------------*/
 static Std_ret EXTI_INTx_setHandler(interrupt_exti_t* _exti, interrupt_src_t src)
 {
 	Std_ret ret = E_NOT_OK;
@@ -91,19 +90,19 @@ static Std_ret EXTI_INTx_setHandler(interrupt_exti_t* _exti, interrupt_src_t src
 }
 
 
-static Std_ret EXTI_INTx_setSenceMode(interrupt_exti_t* _exti, sense_mode_t src)
+static Std_ret EXTI_INTx_setSenceMode(interrupt_exti_t* _exti, sense_mode_t mode)
 {
 	Std_ret ret = E_NOT_OK;
-	if((NULL == _exti) || (src < EXTI_INT0) || (src > EXTI_INT2))
+	if(0)
 	{
 		ret = E_NOT_OK;
 	}
 	else {
-		switch(src)
+		switch(_exti->source)
 		{
-			case EXTI_INT0: ret = EXTI_INT0_SetMode(_exti->sense_mode); break;
-			case EXTI_INT1: ret = EXTI_INT1_SetMode(_exti->sense_mode); break;
-			case EXTI_INT2: ret = EXTI_INT2_SetMode(_exti->sense_mode); break;
+			case EXTI_INT0: ret = EXTI_INT0_SetMode(mode); break;
+			case EXTI_INT1: ret = EXTI_INT1_SetMode(mode); break;
+			case EXTI_INT2: ret = EXTI_INT2_SetMode(mode); break;
 			default: break;
 		}
 	}
@@ -121,10 +120,10 @@ static Std_ret EXTI_INT0_SetMode(sense_mode_t mode)
 	else {
 		switch(mode)
 		{
-			case EXTI_LOW_LEVEL:	CLR_BIT(MCUCR, 1); CLR_BIT(MCUCR, 0);	; break;
-			case EXTI_ON_CHANGE:	CLR_BIT(MCUCR, 1); SET_BIT(MCUCR, 0);	; break;
-			case EXTI_FALLING_EDGE: SET_BIT(MCUCR, 1); CLR_BIT(MCUCR, 0); ; break;
-			case EXTI_RISING_EDGE:	SET_BIT(MCUCR, 1); SET_BIT(MCUCR, 0); ; break;
+			case EXTI_LOW_LEVEL:	CLR_BIT(MCUCR, 1); CLR_BIT(MCUCR, 0); break;
+			case EXTI_ON_CHANGE:	CLR_BIT(MCUCR, 1); SET_BIT(MCUCR, 0); break;
+			case EXTI_FALLING_EDGE: SET_BIT(MCUCR, 1); CLR_BIT(MCUCR, 0); break;
+			case EXTI_RISING_EDGE:	SET_BIT(MCUCR, 1); SET_BIT(MCUCR, 0); break;
 			default: break;
 		}
 	}
@@ -142,10 +141,10 @@ static Std_ret EXTI_INT1_SetMode(sense_mode_t mode)
 	else {
 		switch(mode)
 		{
-			case EXTI_LOW_LEVEL:	CLR_BIT(MCUCR, 3); CLR_BIT(MCUCR, 2);	; break;
-			case EXTI_ON_CHANGE:	CLR_BIT(MCUCR, 3); SET_BIT(MCUCR, 2);	; break;
-			case EXTI_FALLING_EDGE: SET_BIT(MCUCR, 3); CLR_BIT(MCUCR, 2); ; break;
-			case EXTI_RISING_EDGE:	SET_BIT(MCUCR, 3); SET_BIT(MCUCR, 2); ; break;
+			case EXTI_LOW_LEVEL:	CLR_BIT(MCUCR, 3); CLR_BIT(MCUCR, 2); break;
+			case EXTI_ON_CHANGE:	CLR_BIT(MCUCR, 3); SET_BIT(MCUCR, 2); break;
+			case EXTI_FALLING_EDGE: SET_BIT(MCUCR, 3); CLR_BIT(MCUCR, 2); break;
+			case EXTI_RISING_EDGE:	SET_BIT(MCUCR, 3); SET_BIT(MCUCR, 2); break;
 			default: break;
 		}
 	}
@@ -181,9 +180,9 @@ static Std_ret EXTI_INTx_InterruptEnable(interrupt_src_t src)
 	else {
 		switch(src)
 		{
-			case EXTI_INT0: EXTI_INT0_ENABLE(); ; break;
-			case EXTI_INT1: EXTI_INT1_ENABLE(); ; break;
-			case EXTI_INT2: EXTI_INT2_ENABLE(); ; break;
+			case EXTI_INT0: EXTI_INT0_ENABLE();  break;
+			case EXTI_INT1: EXTI_INT1_ENABLE();  break;
+			case EXTI_INT2: EXTI_INT2_ENABLE();  break;
 			default: break;
 		}
 		ret = E_OK;
@@ -201,9 +200,9 @@ static Std_ret EXTI_INTx_InterruptDisable(interrupt_src_t src)
 	else {
 		switch(src)
 		{
-			case EXTI_INT0: EXTI_INT0_DISABLE(); ; break;
-			case EXTI_INT1: EXTI_INT1_DISABLE(); ; break;
-			case EXTI_INT2: EXTI_INT2_DISABLE(); ; break;
+			case EXTI_INT0: EXTI_INT0_DISABLE();  break;
+			case EXTI_INT1: EXTI_INT1_DISABLE();  break;
+			case EXTI_INT2: EXTI_INT2_DISABLE();  break;
 			default: break;
 		}
 		ret = E_OK;
@@ -214,18 +213,16 @@ static Std_ret EXTI_INTx_InterruptDisable(interrupt_src_t src)
 
 void __vector_1(void) __attribute__((signal));
 void __vector_1(void){
-	
+	EXTI_INT0_FLAG_CLEAR();
 	if(EXTI_IN0_InterruptHandler){
-		EXTI_INT0_FLAG_CLEAR();
 		EXTI_IN0_InterruptHandler();
 	}
 }
 
 void __vector_2(void) __attribute__((signal));
 void __vector_2(void){
-	
+	EXTI_INT1_FLAG_CLEAR();
 	if(EXTI_IN1_InterruptHandler){
-		EXTI_INT1_FLAG_CLEAR();
 		EXTI_IN1_InterruptHandler();
 	}
 }

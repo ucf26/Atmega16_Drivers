@@ -32,15 +32,15 @@ void toog3(void){
 int main(void)
 {
 	Std_ret ret = E_NOT_OK;
-	exti_int0.sense_mode = EXTI_FALLING_EDGE;
+	exti_int0.sense_mode = EXTI_RISING_EDGE;
 	exti_int0.source = EXTI_INT0;
 	exti_int0.EXTI_InterruptHandler = toog1;
 	
-	exti_int1.sense_mode = EXTI_FALLING_EDGE;
+	exti_int1.sense_mode = EXTI_RISING_EDGE;
 	exti_int1.source = EXTI_INT1;
 	exti_int1.EXTI_InterruptHandler = toog2;
 	
-	exti_int2.sense_mode = EXTI_FALLING_EDGE;
+	exti_int2.sense_mode = EXTI_RISING_EDGE;
 	exti_int2.source = EXTI_INT2;
 	exti_int2.EXTI_InterruptHandler = toog3;
 	
