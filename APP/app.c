@@ -8,51 +8,29 @@
 
 #include "app.h"
 
-interrupt_exti_t exti_int0, exti_int1, exti_int2;
 
-led_t led1 = {.port_idx = PORTA_INDEX, .pin_idx=PIN0_INDEX, .led_status = LED_OFF};
-led_t led2 = {.port_idx = PORTA_INDEX, .pin_idx=PIN1_INDEX, .led_status = LED_OFF};
-led_t led3 = {.port_idx = PORTA_INDEX, .pin_idx=PIN2_INDEX, .led_status = LED_OFF};
+timer0_t timer0;
 
-void toog1(void){
-	Std_ret ret = E_NOT_OK;
-	ret = LED_Toggle(&led1);
-}
+led_t led1 = {.port_idx = PORTA_INDEX, .pin_idx=PIN0_INDEX, .led_status = LED_ON};
 
-void toog2(void){
-	Std_ret ret = E_NOT_OK;
-	ret = LED_Toggle(&led2);
-}
-
-void toog3(void){
-	Std_ret ret = E_NOT_OK;
-	ret = LED_Toggle(&led3);
+void tttimer0 (void) {
+	LED_Toggle(&led1);
 }
 
 int main(void)
 {
 	Std_ret ret = E_NOT_OK;
-	exti_int0.sense_mode = EXTI_RISING_EDGE;
-	exti_int0.source = EXTI_INT0;
-	exti_int0.EXTI_InterruptHandler = toog1;
-	
-	exti_int1.sense_mode = EXTI_RISING_EDGE;
-	exti_int1.source = EXTI_INT1;
-	exti_int1.EXTI_InterruptHandler = toog2;
-	
-	exti_int2.sense_mode = EXTI_RISING_EDGE;
-	exti_int2.source = EXTI_INT2;
-	exti_int2.EXTI_InterruptHandler = toog3;
-	
-	ret = EXTI_Init(&exti_int0);
-	ret = EXTI_Init(&exti_int1);
-	ret = EXTI_Init(&exti_int2);
+	timer0.timer0_mode = TIMER0_CTC_MODE;
+	timer0.prescaler = TIMER0_CLOCK_PRESCALER_256;
+	timer0.compare_value = 30;
+	timer0.preload = 0;
+	timer0.action_on_ocr0 = TIMER0_TOGGLE_OC0;
+	timer0.TIMER0_CTC_InterruptHandler = tttimer0;
+
+
+	ret = TIMER0_Init(&timer0);
 	
 	ret = LED_Init(&led1);
-	ret = LED_Init(&led2);
-	ret = LED_Init(&led3);
-	
-	
 	
     while(1)
     {

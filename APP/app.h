@@ -8,6 +8,7 @@
 #include "../MCAL/DIO/DIO_INTERFACE.h"
 #include "../HAL/LED/LED_interface.h"
 #include "../MCAL/EXTI/EXTI_interface.h"
+#include "../MCAL/TIMER0/TIMER0_interface.h"
 
 
 

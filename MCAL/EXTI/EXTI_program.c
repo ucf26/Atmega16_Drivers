@@ -211,7 +211,7 @@ static Std_ret EXTI_INTx_InterruptDisable(interrupt_src_t src)
 }
 
 
-void __vector_1(void) __attribute__((signal));
+void __ector_1(void) __attribute__((signal));
 void __vector_1(void){
 	EXTI_INT0_FLAG_CLEAR();
 	if(EXTI_IN0_InterruptHandler){
