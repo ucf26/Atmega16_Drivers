@@ -20,12 +20,12 @@ void tttimer0 (void) {
 int main(void)
 {
 	Std_ret ret = E_NOT_OK;
-	timer0.timer0_mode = TIMER0_CTC_MODE;
-	timer0.prescaler = TIMER0_CLOCK_PRESCALER_256;
-	timer0.compare_value = 30;
+	timer0.timer0_mode = TIMER0_FAST_PWM;
+	timer0.prescaler = TIMER0_CLOCK_PRESCALER_1;
+	timer0.compare_value = 128;
 	timer0.preload = 0;
-	timer0.action_on_ocr0 = TIMER0_TOGGLE_OC0;
-	timer0.TIMER0_CTC_InterruptHandler = tttimer0;
+	timer0.action_on_ocr0 = TIMER0_SET_ON_CTC_CLR_ON_BOTTOM;
+	timer0.TIMER0_CTC_InterruptHandler = NULL;
 
 
 	ret = TIMER0_Init(&timer0);

@@ -22,7 +22,10 @@ static void TIMER0_Set_Mode(uint8 mode);
 static void TIMER0_Set_PreScaler(uint8 prescaler);
 static void TIMER0_Set_PreLoaded_Value(uint8 preload);
 static void TIMER0_Set_OCR0_Value(uint8 mode);
-static void TIMER0_Set_Compare_Output(uint8 mode);
+static void TIMER0_Set_Compare_Output_NonPWM(uint8 mode);
+static void TIMER0_Set_Compare_Output_FastPWM(uint8 mode);
+static void TIMER0_Set_Compare_Output_PhaseCorrectPWM(uint8 mode);
+
 
 Std_ret TIMER0_Init(timer0_t* timer0_obj)
 {
@@ -63,18 +66,22 @@ Std_ret TIMER0_DeInit(timer0_t* timer0_obj)
 	else
 	{
 		/* Disable Over Flow Interrupt */
+		TIMER0_OV_InterruptDisable();
 		
 		/* Disable CTC Interrupt */
+		TIMER0_CTC_InterruptDisable();
 		
 		/* Disconnect OC0 */
+		TIMER0_Set_Compare_Output_NonPWM(TIMER0_OC0_DISCONNECTED);
 		
-		
-		 
+		/* Turn Off Clock Sources */
+		TIMER0_Set_PreScaler(TIMER0_STOPPED);
 	}
 	return ret;
 }
 
 
+/* --------------------------------------------- Helper Functions --------------------------------------------- */
 
 static void TIMER0_Normal_Mode_Config(timer0_t* timer0_obj)
 {
@@ -100,7 +107,17 @@ static void TIMER0_Normal_Mode_Config(timer0_t* timer0_obj)
 
 static void TIMER0_PWM_PHASE_CORRECT_MODE_Config(timer0_t* timer0_obj)
 {
+	/* Set Mode */
+	TIMER0_Set_Mode(timer0_obj->timer0_mode);
 	
+	/* Set prescaler */
+	TIMER0_Set_PreScaler(timer0_obj->prescaler);
+	
+	/* Set OCR0 Value */
+	OCR0 = (uint8)(timer0_obj->compare_value);
+	
+	/* Action on Compare Match */
+	TIMER0_Set_Compare_Output_PhaseCorrectPWM(timer0_obj->action_on_ocr0);
 }
 
 static void TIMER0_CTC_Mode_Config(timer0_t* timer0_obj)
@@ -121,7 +138,7 @@ static void TIMER0_CTC_Mode_Config(timer0_t* timer0_obj)
 	OCR0 = (uint8)(timer0_obj->compare_value);
 	
 	/* Action on Compare Match */
-	TIMER0_Set_Compare_Output(timer0_obj->action_on_ocr0);
+	TIMER0_Set_Compare_Output_NonPWM(timer0_obj->action_on_ocr0);
 	
 	/* Clear Timer0 Interrupt Flag */
 	TIMER0_CTC_FLAG_CLEAR();
@@ -130,9 +147,20 @@ static void TIMER0_CTC_Mode_Config(timer0_t* timer0_obj)
 	GENERAL_INTERRUPT_ENABLE();
 	TIMER0_CTC_InterruptEnable();
 }
+
 static void TIMER0_FastPWM_Mode_Config(timer0_t* timer0_obj)
 {
+	/* Set Mode */
+	TIMER0_Set_Mode(timer0_obj->timer0_mode);
 	
+	/* Set prescaler */
+	TIMER0_Set_PreScaler(timer0_obj->prescaler);
+	
+	/* Set OCR0 Value */
+	OCR0 = (uint8)(timer0_obj->compare_value);
+	
+	/* Action on Compare Match */
+	TIMER0_Set_Compare_Output_FastPWM(timer0_obj->action_on_ocr0);
 }
 
 
@@ -191,9 +219,10 @@ static void TIMER0_Set_PreLoaded_Value(uint8 preload)
 {
 	TCNT0 = preload;
 }
-static void TIMER0_Set_Compare_Output(uint8 mode)
+static void TIMER0_Set_Compare_Output_NonPWM(uint8 mode)
 {
 	pin_config_t Temp_Pin = {.direction = DIO_PIN_OUTPUT, .port_index = PORTB_INDEX, .pin_index = PIN3_INDEX, .logic=DIO_LOW};
+	
 	Std_ret ret = DIO_Pin_Init(&Temp_Pin);
 	
 	switch(mode)
@@ -210,6 +239,46 @@ static void TIMER0_Set_Compare_Output(uint8 mode)
 		case TIMER0_SET_OC0:
 			SET_BIT(TCCR0, COM01); SET_BIT(TCCR0, COM00);
 			break;
+		default: break;
+	}
+}
+static void TIMER0_Set_Compare_Output_FastPWM(uint8 mode)
+{
+	pin_config_t Temp_Pin = {.direction = DIO_PIN_OUTPUT, .port_index = PORTB_INDEX, .pin_index = PIN3_INDEX, .logic=DIO_LOW};
+	
+	Std_ret ret = DIO_Pin_Init(&Temp_Pin);
+	
+	switch(mode)
+	{
+		case TIMER0_OC0_DISCONNECTED:
+		CLR_BIT(TCCR0, COM01); CLR_BIT(TCCR0, COM00);
+		break;
+		case TIMER0_CLR_ON_CTC_SET_ON_BOTTOM:
+		SET_BIT(TCCR0, COM01); CLR_BIT(TCCR0, COM00);
+		break;
+		case TIMER0_SET_ON_CTC_CLR_ON_BOTTOM:
+		SET_BIT(TCCR0, COM01); SET_BIT(TCCR0, COM00);
+		break;
+		default: break;
+	}
+}
+static void TIMER0_Set_Compare_Output_PhaseCorrectPWM(uint8 mode)
+{
+	pin_config_t Temp_Pin = {.direction = DIO_PIN_OUTPUT, .port_index = PORTB_INDEX, .pin_index = PIN3_INDEX, .logic=DIO_LOW};
+	
+	Std_ret ret = DIO_Pin_Init(&Temp_Pin);
+	
+	switch(mode)
+	{
+		case TIMER0_OC0_DISCONNECTED:
+		CLR_BIT(TCCR0, COM01); CLR_BIT(TCCR0, COM00);
+		break;
+		case TIMER0_CLR_ON_CTC_COUNT_UP_SET_ON_COUNT_DOWN:
+		SET_BIT(TCCR0, COM01); CLR_BIT(TCCR0, COM00);
+		break;
+		case TIMER0_CLR_ON_CTC_COUNT_DOWN_SET_ON_COUNT_UP:
+		SET_BIT(TCCR0, COM01); SET_BIT(TCCR0, COM00);
+		break;
 		default: break;
 	}
 }
