@@ -122,7 +122,7 @@
 /* ----------------- Macro Functions Declarations -----------------*/
 
 /* -----------------Data Type Declarations -----------------*/
-#define F_CPU    12000000UL
+#define F_CPU    16000000UL
 /* ----------------- Functions Declarations ----------------- */
 
 

@@ -9,6 +9,7 @@
 #include "../HAL/LED/LED_interface.h"
 #include "../MCAL/EXTI/EXTI_interface.h"
 #include "../MCAL/TIMER0/TIMER0_interface.h"
+#include "../MCAL/USART/USART_interface.h"
 
 
 
